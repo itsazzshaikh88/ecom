@@ -39,7 +39,14 @@ class Product_model extends CI_Model
         $query = $this->db->get();
 
         if ($type == 'list') {
-            return $query->result_array();
+            $products = $query->result_array();
+            foreach ($products as &$product) {
+                $product['product_images'] = $this->db->where('product_id', $product['id'])->get('product_images')->result_array();
+
+                $product['product_variants'] = $this->db->where('product_id', $product['id'])->get('product_variants')->result_array();
+            }
+
+            return $products;
         } else {
             return $query->num_rows();
         }
